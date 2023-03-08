@@ -17,20 +17,6 @@ router.get('/id=:id',async(req,res)=>{
 
 
 
-
-//Adds a User ID to a show
-router.put('/userid=:userid&title=:title',async(req,res)=>{
-
-    userUpdated = await User.findAll({where:{id:req.params.userid}})
-    
-    titleInstance = await Show.findAll({where:{title:req.params.title}})
-    await userUpdated[0].addShow(titleInstance)
-    console.log(req.params)
-    res.json(await userUpdated[0].getShows())
-})
-
-
-
 //Get all shows watched by a user
 
 router.get('/:id/shows',async(req,res)=>{
@@ -39,6 +25,21 @@ router.get('/:id/shows',async(req,res)=>{
     res.json(shows_watched)
 
 })
+
+
+//Adds a User ID to a show
+router.put('/:userid/shows/:showid',async(req,res)=>{
+
+    userUpdated = await User.findAll({where:{id:req.params.userid}})
+    
+    titleInstance = await Show.findAll({where:{id:req.params.showid}})
+    await userUpdated[0].addShow(titleInstance)
+    res.json(await userUpdated[0].getShows())
+})
+
+
+
+
 
 
 module.exports = router
