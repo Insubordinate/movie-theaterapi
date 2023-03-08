@@ -1,22 +1,25 @@
 const express = require('express')
 const {check,validationResult} = require('express-validator')
 const {User,Show} = require('../models/index')
-const users_router = express.Router()
+const router = express.Router()
 
 
 //Get All Users
-users_router.get('/',async(req,res)=>{
+router.get('/',async(req,res)=>{
     res.json(await User.findAll())
 })
 
 
 //Get One User
-users_router.get('/id=:id',async(req,res)=>{
+router.get('/id=:id',async(req,res)=>{
     res.json(await User.findAll({where:{id:req.params.id}}))
 })
 
 
-users_router.put('/userid=:userid&title=:title',async(req,res)=>{
+
+
+//Adds a User ID to a show
+router.put('/userid=:userid&title=:title',async(req,res)=>{
 
     userUpdated = await User.findAll({where:{id:req.params.userid}})
     
@@ -28,5 +31,14 @@ users_router.put('/userid=:userid&title=:title',async(req,res)=>{
 
 
 
+//Get all shows watched by a user
 
-module.exports = users_router
+router.get('/:id/shows',async(req,res)=>{
+    user = await User.findByPk(req.params.id)
+    shows_watched = await user.getShows()
+    res.json(shows_watched)
+
+})
+
+
+module.exports = router
